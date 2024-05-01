@@ -49,18 +49,21 @@
 //!   rocket endpoints can easily access the token as an input parameter.
 //!
 #![deny(
-    missing_debug_implementations,
-    missing_copy_implementations,
-    trivial_casts,
-    trivial_numeric_casts,
-    unsafe_code,
-    unused_imports,
-    unstable_features,
-    unused_import_braces,
-    unused_qualifications
+missing_debug_implementations,
+missing_copy_implementations,
+trivial_casts,
+trivial_numeric_casts,
+unsafe_code,
+unused_imports,
+unstable_features,
+unused_import_braces,
+unused_qualifications
 )]
+
 mod bearer_token;
+
 pub use bearer_token::BearerToken;
+
 pub mod errors;
 pub mod jwk;
 pub mod plugins;
@@ -109,6 +112,10 @@ pub struct FirebaseToken {
     /// scope value
     #[serde(skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
+    ///The user's phone number. Provided only if your scope included the phone
+    /// scope value
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub phone_number: Option<String>,
     /// True if the user's e-mail address has been verified; otherwise false
     #[serde(skip_serializing_if = "Option::is_none")]
     pub email_verified: Option<bool>,
@@ -157,6 +164,7 @@ impl FirebaseToken {
             iss: Self::ISSUER_IDENTIFIER.to_string(),
             sub: uid.to_string(),
             azp: None,
+            phone_number: None,
             email: None,
             email_verified: None,
             family_name: None,
